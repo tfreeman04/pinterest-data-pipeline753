@@ -41,14 +41,14 @@ new_connector = AWSDBConnector()
 def run_infinite_post_data_loop():
     def send_data_to_topic(api_url, topic, data):
         headers = {'Content-Type': 'application/vnd.kafka.json.v2+json'}
-        payload = json.dumps({
+        '''payload = json.dumps({
             "records": [
                 {
                     "value": data
                 }
             ]
-        }, default=str)
-        response = requests.request("POST", api_url, headers=headers, data=payload)
+        }, default=str)'''
+        response = requests.request("POST", api_url, headers=headers, data=data)
         if response.status_code != 200:
             print(f"Failed to send data to {topic}. Status code: {response.status_code}")
         else:
