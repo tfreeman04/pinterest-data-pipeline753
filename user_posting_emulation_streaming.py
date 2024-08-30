@@ -40,7 +40,7 @@ def convert_datetime_to_string(data):
 # Function to send data to the Kinesis stream via API
 def send_data_to_stream(api_url, stream_name, data):
     headers = {'Content-Type': 'application/json'}
-    response = requests.put(api_url, headers=headers, data=json.dumps(data))  # Convert data to JSON format
+    response = requests.put(api_url, headers=headers, data=data)  # Convert data to JSON format
     if response.status_code != 200:
         print(f"Failed to send data to {stream_name}. Status code: {response.status_code}")
         print(response.json())
@@ -76,34 +76,40 @@ def run_infinite_post_data_loop():
             for row in user_selected_row:
                 user_result = convert_datetime_to_string(dict(row._mapping))
 
-            pin_result = json.dumps({
-                "records": [
+            pin_result = json.dumps(
+                
                     {
-                    "value": pin_result
+                    "StreamName":"0eaa2e755d1f.pin",
+                    "Data":pin_result,  
+                    "PartitionKey":"key-1"
                     }
-                ]
-            }, default=str)
-            geo_result = json.dumps({
-                "records": [
+                
+            , default=str)
+            geo_result = json.dumps(
+                
                     {
-                    "value": geo_result
+                    "StreamName":"0eaa2e755d1f.geo",
+                    "Data":geo_result,  
+                    "PartitionKey":"key-1"
                     }
-                ]
-            }, default=str)
-            user_result = json.dumps({
-                "records": [
+                
+            , default=str)
+            user_result = json.dumps(
+                
                     {
-                    "value": user_result
+                    "StreamName":"0eaa2e755d1f.user",
+                    "Data":user_result,  
+                    "PartitionKey":"key-1"
                     }
-                ]
-            }, default=str)
+                
+            , default=str)
             
             streams = ['streaming-0eaa2e755d1f-pin', 'streaming-0eaa2e755d1f-geo', 'streaming-0eaa2e755d1f-user']
 
             # URLs for sending data to Kinesis streams
-            url_pin = 'https://26a10gk4qd.execute-api.us-east-1.amazonaws.com/pintrest'
-            url_geo = 'https://26a10gk4qd.execute-api.us-east-1.amazonaws.com/pintrest/streams/streaming-0eaa2e755d1f-geo'
-            url_user = 'https://26a10gk4qd.execute-api.us-east-1.amazonaws.com/pintrest/streams/streaming-0eaa2e755d1f-user'
+            url_pin = 'https://26a10gk4qd.execute-api.us-east-1.amazonaws.com/pintrest/streams/streaming-0eaa2e755d1f-pin/record'
+            url_geo = 'https://26a10gk4qd.execute-api.us-east-1.amazonaws.com/pintrest/streams/streaming-0eaa2e755d1f-geo/record'
+            url_user = 'https://26a10gk4qd.execute-api.us-east-1.amazonaws.com/pintrest/streams/streaming-0eaa2e755d1f-user/record'
 
             # Sending data to Kinesis streams
             send_data_to_stream(url_pin, streams[0], pin_result)
